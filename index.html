@@ -25,20 +25,17 @@ body {
   color: var(--ink);
 }
 .page {
-  max-width: 1380px;
+  max-width: 1240px;
   margin: 0 auto;
   padding: 28px 24px 48px;
 }
 .layout {
   display: grid;
-  grid-template-columns: 290px minmax(0, 1fr);
+  grid-template-columns: 1fr;
   gap: 34px;
   align-items: start;
 }
-.sidebar {
-  position: sticky;
-  top: 18px;
-}
+.sidebar { display: none; }
 .profile-card {
   background: var(--panel);
   border: 1px solid var(--line);
@@ -352,24 +349,7 @@ tbody tr:hover {
 <body>
 <div class="page">
   <div class="layout">
-    <aside class="sidebar">
-      <div class="profile-card">
-        <div class="avatar">Dataset Portal</div>
-        <h1>Global Health<br>AI Policy</h1>
-        <p>
-          A searchable policy observatory for AI regulation in healthcare across
-          countries, regions, and institutions.
-        </p>
-        <p class="small-note">
-          Designed for GitHub Pages and structured in a style similar to the benchmark page you shared.
-        </p>
-        <div class="side-links">
-          <a href="global_health_ai_policy_dataset.xlsx" download>Download the dataset (.xlsx)</a>
-          <a href="#" id="downloadCsvLink">Download filtered results (.csv)</a>
-          <a href="#tableSection">Jump to dataset table</a>
-        </div>
-      </div>
-    </aside>
+    
 
     <main class="main">
       <div class="topline"></div>
@@ -387,6 +367,9 @@ tbody tr:hover {
           search, filters, sortable columns, and record-level policy details. It highlights
           how jurisdictions approach legal status, transparency, human oversight,
           fairness, privacy, validation, and post-market monitoring for AI in health.
+        </p>
+        <p style="margin-top: 16px;">
+          <a class="policy-link" href="global_health_ai_policy_dataset.xlsx" download>Download the full dataset (.xlsx)</a>
         </p>
       </section>
 
