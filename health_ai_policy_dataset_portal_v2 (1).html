@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Global Health AI Policy Dataset</title>
+<style>
+:root {
+  --bg: #f5f3f1;
+  --panel: #ffffff;
+  --ink: #171717;
+  --muted: #666;
+  --line: #d8d2cc;
+  --accent: #7f1d1d;
+  --accent-soft: #f8eaea;
+  --chip: #f2f2f2;
+  --shadow: 0 8px 28px rgba(0,0,0,0.06);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: "Georgia", "Times New Roman", serif;
+  background: var(--bg);
+  color: var(--ink);
+}
+.page {
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+.layout {
+  display: grid;
+  grid-template-columns: 290px minmax(0, 1fr);
+  gap: 34px;
+  align-items: start;
+}
+.sidebar {
+  position: sticky;
+  top: 18px;
+}
+.profile-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 22px;
+  box-shadow: var(--shadow);
+}
+.avatar {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--line);
+  background:
+    linear-gradient(135deg, #d9d1c7 0%, #f4efe8 100%);
+  display: grid;
+  place-items: center;
+  color: #5b524b;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.sidebar h1 {
+  font-size: 2.3rem;
+  line-height: 0.98;
+  margin: 18px 0 10px;
+}
+.sidebar p {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.45;
+  margin: 0 0 14px;
+}
+.side-links a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.side-links {
+  display: grid;
+  gap: 10px;
+  margin-top: 14px;
+}
+.main {
+  min-width: 0;
+}
+.topline {
+  border-top: 2px solid var(--line);
+  padding-top: 16px;
+  margin-bottom: 20px;
+}
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 1.05rem;
+  margin-bottom: 32px;
+}
+.crumbs a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.hero {
+  text-align: center;
+  margin-bottom: 30px;
+}
+.hero h2 {
+  font-size: clamp(2.3rem, 4vw, 4rem);
+  line-height: 1.02;
+  margin: 6px 0 10px;
+}
+.hero p {
+  max-width: 860px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 1.16rem;
+  line-height: 1.55;
+}
+.meta {
+  font-style: italic;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin: 26px 0;
+}
+.stat {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+}
+.stat .value {
+  display: block;
+  font-size: 1.7rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.stat .label {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+.controls {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.controls-grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(4, 1fr);
+  gap: 12px;
+}
+label {
+  display: block;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+  color: var(--muted);
+}
+input[type="search"], select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #c9c3bc;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.98rem;
+  border-radius: 10px;
+}
+.chip-groups {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+}
+.chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  border: 1px solid #b8b1aa;
+  background: var(--chip);
+  color: #444;
+  padding: 7px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.92rem;
+}
+.chip.active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: #bb8f8f;
+}
+.action-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #b8b1aa;
+  color: var(--ink);
+  text-decoration: none;
+  background: #fff;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.96rem;
+}
+.button.primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+.table-wrap {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.table-meta {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.table-scroll {
+  overflow: auto;
+  max-height: 72vh;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1150px;
+}
+thead th {
+  position: sticky;
+  top: 0;
+  background: #faf8f6;
+  border-bottom: 1px solid var(--line);
+  padding: 11px 12px;
+  text-align: left;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  cursor: pointer;
+}
+tbody td {
+  border-bottom: 1px solid #eee8e3;
+  padding: 11px 12px;
+  vertical-align: top;
+  font-size: 0.97rem;
+}
+tbody tr:hover {
+  background: #fcfaf8;
+}
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #d4cdc6;
+  background: #f8f8f8;
+  font-size: 0.8rem;
+  margin-right: 4px;
+  margin-bottom: 3px;
+}
+.badge.yes { background: #edf7ee; color: #23633b; border-color: #b8d7bf; }
+.badge.partial { background: #fff8e7; color: #8d6500; border-color: #e7d7a6; }
+.badge.no { background: #faf1f1; color: #8a3333; border-color: #e0c1c1; }
+.badge.binding { background: #eef3ff; color: #274690; border-color: #c4d0ef; }
+.badge.active { background: #edf7ee; color: #23633b; border-color: #b8d7bf; }
+.policy-link {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.detail-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 22px;
+}
+.detail-panel.open { display: flex; }
+.detail-card {
+  background: #fff;
+  width: min(900px, 100%);
+  max-height: 88vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  padding: 22px;
+}
+.detail-card h3 {
+  font-size: 2rem;
+  margin: 0 0 6px;
+}
+.detail-close {
+  float: right;
+  border: 0;
+  background: transparent;
+  font-size: 1.7rem;
+  cursor: pointer;
+}
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 22px;
+  margin-top: 16px;
+}
+.detail-item {
+  border-top: 1px solid #ece5de;
+  padding-top: 10px;
+}
+.detail-item strong {
+  display: block;
+  font-size: 0.86rem;
+  color: var(--muted);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.small-note {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+@media (max-width: 1050px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { position: static; }
+  .controls-grid { grid-template-columns: 1fr 1fr; }
+  .stat-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .page { padding: 18px 14px 32px; }
+  .controls-grid { grid-template-columns: 1fr; }
+  .stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .detail-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="profile-card">
+        <div class="avatar">Dataset Portal</div>
+        <h1>Global Health<br>AI Policy</h1>
+        <p>
+          A searchable policy observatory for AI regulation in healthcare across
+          countries, regions, and institutions.
+        </p>
+        <p class="small-note">
+          Designed for GitHub Pages and structured in a style similar to the benchmark page you shared.
+        </p>
+        <div class="side-links">
+          <a href="global_health_ai_policy_dataset.xlsx" download>Download the dataset (.xlsx)</a>
+          <a href="#" id="downloadCsvLink">Download filtered results (.csv)</a>
+          <a href="#tableSection">Jump to dataset table</a>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="topline"></div>
+      <div class="crumbs">
+        <a href="#">← Back to Home</a>
+        <span>|</span>
+        <a href="#">Research Data</a>
+      </div>
+
+      <section class="hero">
+        <div class="meta">Dataset view</div>
+        <h2>Global Health AI Policy Dataset</h2>
+        <p>
+          This portal organizes your uploaded Excel dataset into an interactive research page with
+          search, filters, sortable columns, and record-level policy details. It highlights
+          how jurisdictions approach legal status, transparency, human oversight,
+          fairness, privacy, validation, and post-market monitoring for AI in health.
+        </p>
+      </section>
+
+      <section class="stat-grid" id="statGrid">
+        <div class="stat"><span class="value" id="statRecords">96</span><span class="label">Records</span></div>
+        <div class="stat"><span class="value" id="statJurisdictions">63</span><span class="label">Jurisdictions</span></div>
+        <div class="stat"><span class="value" id="statRegions">11</span><span class="label">Regions</span></div>
+        <div class="stat"><span class="value" id="statActive">93</span><span class="label">Active policies</span></div>
+        <div class="stat"><span class="value" id="statHealth">96</span><span class="label">Healthcare-specific or partial</span></div>
+        <div class="stat"><span class="value" id="statBinding">8</span><span class="label">Binding policies</span></div>
+      </section>
+
+      <section class="controls">
+        <div class="controls-grid">
+          <div>
+            <label for="searchBox">Search</label>
+            <input id="searchBox" type="search" placeholder="Search policy, jurisdiction, body, notes, or keywords..." />
+          </div>
+          <div>
+            <label for="regionSelect">Region</label>
+            <select id="regionSelect"></select>
+          </div>
+          <div>
+            <label for="typeSelect">Policy type</label>
+            <select id="typeSelect"></select>
+          </div>
+          <div>
+            <label for="legalSelect">Legal status</label>
+            <select id="legalSelect"></select>
+          </div>
+          <div>
+            <label for="incomeSelect">Income group</label>
+            <select id="incomeSelect"></select>
+          </div>
+        </div>
+
+        <div class="chip-groups">
+          <div>
+            <label>Quick region filters</label>
+            <div class="chip-row" id="regionChips"></div>
+          </div>
+          <div>
+            
+        </div>
+
+        <div class="action-row">
+          <button class="button primary" id="resetFilters">Reset filters</button>
+                    <button class="button" id="showActiveOnly">Show active only</button>
+        </div>
+      </section>
+
+      <section class="table-wrap" id="tableSection">
+        <div class="table-meta">
+          <div><span id="resultCount">0</span> policies shown</div>
+          <div>Click a row for full policy details. Click a column heading to sort.</div>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th data-sort="policy_name">Policy</th>
+                <th data-sort="jurisdiction">Jurisdiction</th>
+                <th data-sort="region">Region</th>
+                <th data-sort="year">Year</th>
+                <th data-sort="policy_type">Type</th>
+                <th data-sort="legal_status">Legal status</th>
+                <th data-sort="healthcare_specific">Healthcare scope</th>
+                <th data-sort="clinical_use_covered">Clinical use</th>
+                <th data-sort="implementation_status">Status</th>
+                <th data-sort="issuing_body">Issuing body</th>
+                <th>Source</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div class="detail-panel" id="detailPanel" aria-hidden="true">
+  <div class="detail-card">
+    <button class="detail-close" id="detailClose" aria-label="Close">×</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+const dataset = [{"record_id": "EU_AI_ACT_2024", "jurisdiction": "European Union", "jurisdiction_type": "supranational", "region": "Europe", "income_group": "high", "year": 2024, "policy_name": "EU Artificial Intelligence Act", "policy_type": "law", "issuing_body": "European Parliament", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "EU regulatory enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2024-08-01", "source_link": "https://artificialintelligenceact.eu/", "source_type": "primary_official", "notes": "High-risk systems include medical AI"}, {"record_id": "EU_MDR_2017", "jurisdiction": "European Union", "jurisdiction_type": "supranational", "region": "Europe", "income_group": "high", "year": 2017, "policy_name": "EU Medical Device Regulation", "policy_type": "law", "issuing_body": "European Commission", "legal_status": "binding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "partial", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Notified body approval", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2017-05-05", "source_link": "https://health.ec.europa.eu", "source_type": "primary_official", "notes": "Regulates AI medical devices"}, {"record_id": "US_FDA_SAMD_2019", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2019, "policy_name": "FDA AI/ML SaMD Framework", "policy_type": "guidance", "issuing_body": "FDA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "FDA regulatory review", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-04-02", "source_link": "https://www.fda.gov", "source_type": "primary_official", "notes": "Framework for adaptive AI software"}, {"record_id": "US_FDA_ACTION_PLAN_2021", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2021, "policy_name": "FDA AI/ML Software Action Plan", "policy_type": "framework", "issuing_body": "FDA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "FDA oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-01-12", "source_link": "https://www.fda.gov", "source_type": "primary_official", "notes": "AI medical device roadmap"}, {"record_id": "US_EXEC_AI_2023", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2023, "policy_name": "Executive Order on Safe, Secure and Trustworthy AI", "policy_type": "law", "issuing_body": "White House", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Federal agency enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2023-10-30", "source_link": "https://www.whitehouse.gov/briefing-room/presidential-actions/2023/10/30/executive-order-on-the-safe-secure-and-trustworthy-development-and-use-of-artificial-intelligence/", "source_type": "primary_official", "notes": "Includes healthcare provisions"}, {"record_id": "UK_MHRA_ROADMAP_2021", "jurisdiction": "United Kingdom", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "MHRA AI as Medical Device Roadmap", "policy_type": "framework", "issuing_body": "MHRA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "MHRA approval", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-10-01", "source_link": "https://www.gov.uk", "source_type": "primary_official", "notes": "Medical device regulatory roadmap"}, {"record_id": "UK_AI_WHITEPAPER_2023", "jurisdiction": "United Kingdom", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2023, "policy_name": "UK AI Regulation White Paper", "policy_type": "framework", "issuing_body": "UK Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Sector regulator oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2023-03-29", "source_link": "https://www.gov.uk", "source_type": "primary_official", "notes": "Cross-sector AI governance"}, {"record_id": "CA_AIDA_2023", "jurisdiction": "Canada", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2023, "policy_name": "Artificial Intelligence and Data Act", "policy_type": "law", "issuing_body": "Government of Canada", "legal_status": "proposed", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Federal enforcement", "penalties_present": "yes", "implementation_status": "proposed", "effective_date": "2023-06-22", "source_link": "https://ised-isde.canada.ca", "source_type": "primary_official", "notes": "General AI legislation"}, {"record_id": "AU_TGA_AI_2021", "jurisdiction": "Australia", "jurisdiction_type": "country", "region": "Oceania", "income_group": "high", "year": 2021, "policy_name": "AI Medical Device Guidance", "policy_type": "guidance", "issuing_body": "Therapeutic Goods Administration", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "TGA approval", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-02-01", "source_link": "https://www.tga.gov.au", "source_type": "primary_official", "notes": "Medical AI regulation"}, {"record_id": "JP_PMDA_AI_2019", "jurisdiction": "Japan", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2019, "policy_name": "PMDA AI Medical Device Review Framework", "policy_type": "guidance", "issuing_body": "PMDA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Regulatory approval", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-03-01", "source_link": "https://www.pmda.go.jp", "source_type": "primary_official", "notes": "AI device approval system"}, {"record_id": "KR_AI_MED_DEVICE_2020", "jurisdiction": "South Korea", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2020, "policy_name": "Guideline for AI Medical Devices", "policy_type": "guidance", "issuing_body": "MFDS", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Regulatory approval", "penalties_present": "no", "implementation_status": "active", "effective_date": "2020-07-01", "source_link": "https://www.mfds.go.kr", "source_type": "primary_official", "notes": "AI medical regulation"}, {"record_id": "SG_MODEL_AI_2019", "jurisdiction": "Singapore", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2019, "policy_name": "Model AI Governance Framework", "policy_type": "framework", "issuing_body": "IMDA", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://www.imda.gov.sg", "source_type": "primary_official", "notes": "AI governance"}, {"record_id": "SG_HEALTH_AI_2022", "jurisdiction": "Singapore", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2022, "policy_name": "AI Healthcare Governance Framework", "policy_type": "framework", "issuing_body": "Ministry of Health Singapore", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "yes", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Health ministry oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://www.moh.gov.sg", "source_type": "primary_official", "notes": "Healthcare AI governance"}, {"record_id": "CN_GENAI_RULES_2023", "jurisdiction": "China", "jurisdiction_type": "country", "region": "East Asia", "income_group": "upper_middle", "year": 2023, "policy_name": "Generative AI Service Regulation", "policy_type": "law", "issuing_body": "Cyberspace Administration of China", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "generative_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2023-08-15", "source_link": "https://www.cac.gov.cn", "source_type": "primary_official", "notes": "Generative AI regulation"}, {"record_id": "WHO_AI_ETHICS_2021", "jurisdiction": "Global", "jurisdiction_type": "supranational", "region": "Global", "income_group": "not_applicable", "year": 2021, "policy_name": "WHO Ethics and Governance of AI for Health", "policy_type": "framework", "issuing_body": "World Health Organization", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "yes", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Global guidance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-06-28", "source_link": "https://www.who.int/publications/i/item/9789240029200", "source_type": "primary_official", "notes": "Global AI ethics guidance"}, {"record_id": "OECD_AI_PRINCIPLES_2019", "jurisdiction": "OECD", "jurisdiction_type": "supranational", "region": "Global", "income_group": "not_applicable", "year": 2019, "policy_name": "OECD AI Principles", "policy_type": "framework", "issuing_body": "OECD", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "International governance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-05-22", "source_link": "https://oecd.ai/en/ai-principles", "source_type": "primary_official", "notes": "International AI governance principles"}, {"record_id": "FR_HEALTH_AI_STRATEGY_2018", "jurisdiction": "France", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2018, "policy_name": "France AI for Humanity Strategy", "policy_type": "strategy", "issuing_body": "French Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-03-29", "source_link": "https://www.gouvernement.fr", "source_type": "primary_official", "notes": "Includes health AI strategy"}, {"record_id": "DE_AI_STRATEGY_2018", "jurisdiction": "Germany", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2018, "policy_name": "German National AI Strategy", "policy_type": "strategy", "issuing_body": "Federal Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Federal oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-11-15", "source_link": "https://www.bundesregierung.de", "source_type": "primary_official", "notes": "Includes healthcare AI"}, {"record_id": "IT_AI_STRATEGY_2021", "jurisdiction": "Italy", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Italian National AI Strategy", "policy_type": "strategy", "issuing_body": "Italian Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-11-24", "source_link": "https://www.governo.it", "source_type": "primary_official", "notes": "AI national strategy"}, {"record_id": "ES_AI_STRATEGY_2020", "jurisdiction": "Spain", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Spanish AI Strategy", "policy_type": "strategy", "issuing_body": "Spanish Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2020-12-02", "source_link": "https://www.lamoncloa.gob.es", "source_type": "primary_official", "notes": "National AI strategy"}, {"record_id": "NL_AI_COALITION_2019", "jurisdiction": "Netherlands", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Dutch National AI Coalition", "policy_type": "framework", "issuing_body": "Dutch Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-10-01", "source_link": "https://www.ai-council.nl", "source_type": "primary_official", "notes": "National AI governance framework"}, {"record_id": "IL_AI_HEALTH_2023", "jurisdiction": "Israel", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2023, "policy_name": "Israel National AI Program", "policy_type": "strategy", "issuing_body": "Israel Innovation Authority", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://innovationisrael.org.il", "source_type": "primary_official", "notes": "Includes medical AI initiatives"}, {"record_id": "IN_AI_STRATEGY_2018", "jurisdiction": "India", "jurisdiction_type": "country", "region": "South Asia", "income_group": "lower_middle", "year": 2018, "policy_name": "India National Strategy for AI", "policy_type": "strategy", "issuing_body": "NITI Aayog", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-06-01", "source_link": "https://niti.gov.in", "source_type": "primary_official", "notes": "AI for health initiatives"}, {"record_id": "BR_AI_STRATEGY_2021", "jurisdiction": "Brazil", "jurisdiction_type": "country", "region": "Latin America", "income_group": "upper_middle", "year": 2021, "policy_name": "Brazil National AI Strategy", "policy_type": "strategy", "issuing_body": "Brazilian Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-04-06", "source_link": "https://www.gov.br", "source_type": "primary_official", "notes": "AI governance strategy"}, {"record_id": "MX_AI_POLICY_2023", "jurisdiction": "Mexico", "jurisdiction_type": "country", "region": "Latin America", "income_group": "upper_middle", "year": 2023, "policy_name": "Mexico National AI Policy", "policy_type": "strategy", "issuing_body": "Mexican Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://www.gob.mx", "source_type": "primary_official", "notes": "Emerging AI governance"}, {"record_id": "ZA_AI_STRATEGY_2021", "jurisdiction": "South Africa", "jurisdiction_type": "country", "region": "Africa", "income_group": "upper_middle", "year": 2021, "policy_name": "South Africa AI Strategy", "policy_type": "strategy", "issuing_body": "Department of Communications", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-08-01", "source_link": "https://www.gov.za", "source_type": "primary_official", "notes": "National AI governance strategy"}, {"record_id": "AE_AI_STRATEGY_2017", "jurisdiction": "United Arab Emirates", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2017, "policy_name": "UAE National AI Strategy", "policy_type": "strategy", "issuing_body": "UAE Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2017-10-15", "source_link": "https://ai.gov.ae", "source_type": "primary_official", "notes": "Includes healthcare AI initiatives"}, {"record_id": "NIST_AI_RMF_2023", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2023, "policy_name": "NIST AI Risk Management Framework", "policy_type": "framework", "issuing_body": "NIST", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Standards guidance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2023-01-26", "source_link": "https://www.nist.gov/itl/ai-risk-management-framework", "source_type": "primary_official", "notes": "Widely used governance framework including healthcare use cases"}, {"record_id": "NIST_GENAI_PROFILE_2024", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2024, "policy_name": "NIST Generative AI Risk Management Profile", "policy_type": "framework", "issuing_body": "NIST", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "generative_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Standards guidance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2024-07-26", "source_link": "https://www.nist.gov", "source_type": "primary_official", "notes": "Extension of AI RMF for generative AI"}, {"record_id": "FDA_GMLP_2021", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2021, "policy_name": "Good Machine Learning Practice for Medical Devices", "policy_type": "guidance", "issuing_body": "FDA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Regulatory oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://www.fda.gov/medical-devices/software-medical-device-samd/good-machine-learning-practice-medical-device-development-guiding-principles", "source_type": "primary_official", "notes": "Principles for AI medical device development"}, {"record_id": "EU_AI_COORD_PLAN_2021", "jurisdiction": "European Union", "jurisdiction_type": "supranational", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Coordinated Plan on Artificial Intelligence", "policy_type": "strategy", "issuing_body": "European Commission", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "EU governance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-04-21", "source_link": "https://digital-strategy.ec.europa.eu", "source_type": "primary_official", "notes": "EU strategy supporting AI development including healthcare"}, {"record_id": "EU_HEALTH_DATA_SPACE_2024", "jurisdiction": "European Union", "jurisdiction_type": "supranational", "region": "Europe", "income_group": "high", "year": 2024, "policy_name": "European Health Data Space Regulation", "policy_type": "law", "issuing_body": "European Commission", "legal_status": "binding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "yes", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "EU enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2025-03-26", "source_link": "https://health.ec.europa.eu/ehealth-digital-health-and-care/european-health-data-space-regulation-ehds_en", "source_type": "primary_official", "notes": "Data infrastructure supporting AI healthcare research"}, {"record_id": "MHRA_AI_CHANGE_PROGRAM_2022", "jurisdiction": "United Kingdom", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2022, "policy_name": "MHRA Software and AI Change Programme", "policy_type": "framework", "issuing_body": "MHRA", "legal_status": "nonbinding", "healthcare_specific": "yes", "ai_scope": "medical_ai", "clinical_use_covered": "yes", "administrative_use_covered": "no", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Regulatory approval", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "https://www.gov.uk/government/publications/software-and-ai-as-a-medical-device-change-programme/software-and-ai-as-a-medical-device-change-programme-roadmap", "source_type": "primary_official", "notes": "Future regulation of AI medical software"}, {"record_id": "CANADA_PAN_AI_STRATEGY_2017", "jurisdiction": "Canada", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2017, "policy_name": "Pan-Canadian Artificial Intelligence Strategy", "policy_type": "strategy", "issuing_body": "Government of Canada", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2017-03-22", "source_link": "https://ised-isde.canada.ca", "source_type": "primary_official", "notes": "National AI research and governance strategy"}, {"record_id": "AUSTRALIA_AI_ACTION_PLAN_2021", "jurisdiction": "Australia", "jurisdiction_type": "country", "region": "Oceania", "income_group": "high", "year": 2021, "policy_name": "Australia AI Action Plan", "policy_type": "strategy", "issuing_body": "Australian Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-06-24", "source_link": "https://www.industry.gov.au", "source_type": "primary_official", "notes": "National AI strategy including health"}, {"record_id": "JAPAN_AI_GOVERNANCE_GUIDELINES_2021", "jurisdiction": "Japan", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2021, "policy_name": "AI Governance Guidelines", "policy_type": "guidance", "issuing_body": "Japanese Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-07-09", "source_link": "https://www.meti.go.jp", "source_type": "primary_official", "notes": "Governance principles for AI deployment"}, {"record_id": "KOREA_AI_BASIC_ACT_2024", "jurisdiction": "South Korea", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2024, "policy_name": "AI Basic Act", "policy_type": "law", "issuing_body": "South Korean Government", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "National enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2024-12-01", "source_link": "https://www.msit.go.kr", "source_type": "primary_official", "notes": "Comprehensive AI regulatory law"}, {"record_id": "SINGAPORE_AI_VERIFY_2023", "jurisdiction": "Singapore", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2023, "policy_name": "AI Verify Governance Testing Framework", "policy_type": "framework", "issuing_body": "IMDA", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2023-05-01", "source_link": "https://www.imda.gov.sg", "source_type": "primary_official", "notes": "AI testing framework"}, {"record_id": "UAE_AI_STRATEGY_2031", "jurisdiction": "United Arab Emirates", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2017, "policy_name": "UAE National Artificial Intelligence Strategy 2031", "policy_type": "strategy", "issuing_body": "UAE Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2017-10-15", "source_link": "https://ai.gov.ae", "source_type": "primary_official", "notes": "National AI strategy including healthcare"}, {"record_id": "SAUDI_AI_STRATEGY_2020", "jurisdiction": "Saudi Arabia", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2020, "policy_name": "Saudi National Strategy for Data and AI", "policy_type": "strategy", "issuing_body": "SDAIA", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2020-10-21", "source_link": "https://sdaia.gov.sa", "source_type": "primary_official", "notes": "National AI governance strategy"}, {"record_id": "US_AI_BILL_RIGHTS_2022", "jurisdiction": "United States", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2022, "policy_name": "Blueprint for an AI Bill of Rights", "policy_type": "framework", "issuing_body": "White House OSTP", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Federal guidance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2022-10-04", "source_link": "https://www.whitehouse.gov/ostp/ai-bill-of-rights/", "source_type": "primary", "notes": "Civil rights framework for automated systems"}, {"record_id": "CHINA_GENAI_RULES_2023", "jurisdiction": "China", "jurisdiction_type": "country", "region": "East Asia", "income_group": "upper_middle", "year": 2023, "policy_name": "Interim Measures for the Management of Generative AI Services", "policy_type": "law", "issuing_body": "Cyberspace Administration of China", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "generative_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "National enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2023-08-15", "source_link": "https://www.cac.gov.cn", "source_type": "primary", "notes": "China regulation governing generative AI deployment"}, {"record_id": "CHINA_ALGO_RECOMMEND_2022", "jurisdiction": "China", "jurisdiction_type": "country", "region": "East Asia", "income_group": "upper_middle", "year": 2022, "policy_name": "Algorithmic Recommendation Management Provisions", "policy_type": "law", "issuing_body": "Cyberspace Administration of China", "legal_status": "binding", "healthcare_specific": "partial", "ai_scope": "algorithmic_systems", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "National enforcement", "penalties_present": "yes", "implementation_status": "active", "effective_date": "2022-03-01", "source_link": "https://www.cac.gov.cn", "source_type": "primary", "notes": "Regulates recommendation algorithms"}, {"record_id": "CANADA_AIDA_2023", "jurisdiction": "Canada", "jurisdiction_type": "country", "region": "North America", "income_group": "high", "year": 2023, "policy_name": "Artificial Intelligence and Data Act (Bill C‑27)", "policy_type": "law", "issuing_body": "Government of Canada", "legal_status": "pending", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Federal enforcement", "penalties_present": "yes", "implementation_status": "pending", "effective_date": "", "source_link": "https://ised-isde.canada.ca", "source_type": "primary", "notes": "Proposed federal AI law"}, {"record_id": "UK_AI_WHITE_PAPER_2023", "jurisdiction": "United Kingdom", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2023, "policy_name": "Pro‑Innovation AI Regulation White Paper", "policy_type": "policy", "issuing_body": "UK Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Regulatory guidance", "penalties_present": "no", "implementation_status": "active", "effective_date": "2023-03-29", "source_link": "https://www.gov.uk", "source_type": "primary", "notes": "Risk-based AI governance approach"}, {"record_id": "BRAZIL_AI_BILL_2023", "jurisdiction": "Brazil", "jurisdiction_type": "country", "region": "South America", "income_group": "upper_middle", "year": 2023, "policy_name": "Brazil Artificial Intelligence Bill (PL 2338/2023)", "policy_type": "law", "issuing_body": "Brazilian Senate", "legal_status": "pending", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "National enforcement", "penalties_present": "yes", "implementation_status": "pending", "effective_date": "", "source_link": "https://www25.senado.leg.br", "source_type": "primary", "notes": "Proposed national AI framework"}, {"record_id": "SINGAPORE_MODEL_AI_GOV_2019", "jurisdiction": "Singapore", "jurisdiction_type": "country", "region": "East Asia", "income_group": "high", "year": 2019, "policy_name": "Model AI Governance Framework", "policy_type": "framework", "issuing_body": "IMDA", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "yes", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-01-23", "source_link": "https://www.imda.gov.sg", "source_type": "primary", "notes": "Voluntary governance framework"}, {"record_id": "INDIA_AI_STRATEGY_2018", "jurisdiction": "India", "jurisdiction_type": "country", "region": "South Asia", "income_group": "lower_middle", "year": 2018, "policy_name": "National Strategy for Artificial Intelligence", "policy_type": "strategy", "issuing_body": "NITI Aayog", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "partial", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-06-01", "source_link": "https://niti.gov.in", "source_type": "primary", "notes": "AI strategy including health sector"}, {"record_id": "GERMANY_AI_STRATEGY_2018", "jurisdiction": "Germany", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2018, "policy_name": "Germany National AI Strategy", "policy_type": "strategy", "issuing_body": "Federal Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-11-15", "source_link": "https://www.bundesregierung.de", "source_type": "primary", "notes": "German AI governance strategy"}, {"record_id": "FRANCE_AI_STRATEGY_2018", "jurisdiction": "France", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2018, "policy_name": "France AI Strategy (Villani Report)", "policy_type": "strategy", "issuing_body": "French Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-03-29", "source_link": "https://www.gouvernement.fr", "source_type": "primary", "notes": "National AI policy initiative"}, {"record_id": "ITALY_AI_STRATEGY_2021", "jurisdiction": "Italy", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Italy National AI Strategy", "policy_type": "strategy", "issuing_body": "Italian Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2021-11-24", "source_link": "https://www.mise.gov.it", "source_type": "primary", "notes": "Italian AI development plan"}, {"record_id": "SPAIN_AI_STRATEGY_2020", "jurisdiction": "Spain", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Spain National Artificial Intelligence Strategy", "policy_type": "strategy", "issuing_body": "Spanish Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2020-12-02", "source_link": "https://www.mineco.gob.es", "source_type": "primary", "notes": "Spain AI governance initiative"}, {"record_id": "NETHERLANDS_AI_STRATEGY_2019", "jurisdiction": "Netherlands", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Strategic Action Plan for AI", "policy_type": "strategy", "issuing_body": "Dutch Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-10-08", "source_link": "https://www.government.nl", "source_type": "primary", "notes": "Dutch AI strategy"}, {"record_id": "FINLAND_AI_STRATEGY_2017", "jurisdiction": "Finland", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2017, "policy_name": "Finland Artificial Intelligence Programme", "policy_type": "strategy", "issuing_body": "Finnish Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2017-10-23", "source_link": "https://tem.fi", "source_type": "primary", "notes": "Early national AI program"}, {"record_id": "NORWAY_AI_STRATEGY_2020", "jurisdiction": "Norway", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "National Strategy for Artificial Intelligence", "policy_type": "strategy", "issuing_body": "Norwegian Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2020-01-14", "source_link": "https://www.regjeringen.no", "source_type": "primary", "notes": "Norwegian AI policy"}, {"record_id": "DENMARK_AI_STRATEGY_2019", "jurisdiction": "Denmark", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Denmark National AI Strategy", "policy_type": "strategy", "issuing_body": "Danish Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2019-03-15", "source_link": "https://www.regeringen.dk", "source_type": "primary", "notes": "National AI development strategy"}, {"record_id": "SWEDEN_AI_STRATEGY_2018", "jurisdiction": "Sweden", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2018, "policy_name": "Sweden National AI Strategy", "policy_type": "strategy", "issuing_body": "Swedish Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "Government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "2018-05-16", "source_link": "https://www.regeringen.se", "source_type": "primary", "notes": "Sweden AI governance program"}, {"record_id": "ARGENTINA_AI_STRATEGY", "jurisdiction": "Argentina", "jurisdiction_type": "country", "region": "South America", "income_group": "upper_middle", "year": 2019, "policy_name": "Argentina National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "CHILE_AI_POLICY", "jurisdiction": "Chile", "jurisdiction_type": "country", "region": "South America", "income_group": "high", "year": 2021, "policy_name": "Chile National AI Policy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "COLOMBIA_AI_POLICY", "jurisdiction": "Colombia", "jurisdiction_type": "country", "region": "South America", "income_group": "upper_middle", "year": 2019, "policy_name": "Colombia National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "PERU_AI_STRATEGY", "jurisdiction": "Peru", "jurisdiction_type": "country", "region": "South America", "income_group": "upper_middle", "year": 2021, "policy_name": "Peru National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "MEXICO_AI_POLICY", "jurisdiction": "Mexico", "jurisdiction_type": "country", "region": "North America", "income_group": "upper_middle", "year": 2018, "policy_name": "Mexico AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "ISRAEL_AI_STRATEGY", "jurisdiction": "Israel", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2021, "policy_name": "Israel National AI Program", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "QATAR_AI_STRATEGY", "jurisdiction": "Qatar", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2019, "policy_name": "Qatar National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "BAHRAIN_AI_STRATEGY", "jurisdiction": "Bahrain", "jurisdiction_type": "country", "region": "Middle East", "income_group": "high", "year": 2019, "policy_name": "Bahrain AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "EGYPT_AI_STRATEGY", "jurisdiction": "Egypt", "jurisdiction_type": "country", "region": "Africa", "income_group": "lower_middle", "year": 2021, "policy_name": "Egypt National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "KENYA_AI_STRATEGY", "jurisdiction": "Kenya", "jurisdiction_type": "country", "region": "Africa", "income_group": "lower_middle", "year": 2022, "policy_name": "Kenya National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "RWANDA_AI_POLICY", "jurisdiction": "Rwanda", "jurisdiction_type": "country", "region": "Africa", "income_group": "low", "year": 2023, "policy_name": "Rwanda AI Policy Framework", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "NIGERIA_AI_STRATEGY", "jurisdiction": "Nigeria", "jurisdiction_type": "country", "region": "Africa", "income_group": "lower_middle", "year": 2024, "policy_name": "Nigeria National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "SOUTH_AFRICA_AI_POLICY", "jurisdiction": "South Africa", "jurisdiction_type": "country", "region": "Africa", "income_group": "upper_middle", "year": 2022, "policy_name": "South Africa AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "GHANA_AI_POLICY", "jurisdiction": "Ghana", "jurisdiction_type": "country", "region": "Africa", "income_group": "lower_middle", "year": 2023, "policy_name": "Ghana National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "THAILAND_AI_STRATEGY", "jurisdiction": "Thailand", "jurisdiction_type": "country", "region": "Southeast Asia", "income_group": "upper_middle", "year": 2022, "policy_name": "Thailand National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "VIETNAM_AI_STRATEGY", "jurisdiction": "Vietnam", "jurisdiction_type": "country", "region": "Southeast Asia", "income_group": "lower_middle", "year": 2021, "policy_name": "Vietnam National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "INDONESIA_AI_STRATEGY", "jurisdiction": "Indonesia", "jurisdiction_type": "country", "region": "Southeast Asia", "income_group": "lower_middle", "year": 2020, "policy_name": "Indonesia National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "PHILIPPINES_AI_ROADMAP", "jurisdiction": "Philippines", "jurisdiction_type": "country", "region": "Southeast Asia", "income_group": "lower_middle", "year": 2021, "policy_name": "Philippines AI Roadmap", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "MALAYSIA_AI_ROADMAP", "jurisdiction": "Malaysia", "jurisdiction_type": "country", "region": "Southeast Asia", "income_group": "upper_middle", "year": 2021, "policy_name": "Malaysia National AI Roadmap", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "NEW_ZEALAND_AI_POLICY", "jurisdiction": "New Zealand", "jurisdiction_type": "country", "region": "Oceania", "income_group": "high", "year": 2019, "policy_name": "New Zealand AI Strategy Discussion Paper", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "ESTONIA_AI_STRATEGY", "jurisdiction": "Estonia", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Estonia National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "LATVIA_AI_STRATEGY", "jurisdiction": "Latvia", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Latvia National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "LITHUANIA_AI_STRATEGY", "jurisdiction": "Lithuania", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Lithuania AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "POLAND_AI_STRATEGY", "jurisdiction": "Poland", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Poland AI Policy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "CZECH_AI_STRATEGY", "jurisdiction": "Czech Republic", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Czech National AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "SLOVAKIA_AI_STRATEGY", "jurisdiction": "Slovakia", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Slovakia AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "HUNGARY_AI_STRATEGY", "jurisdiction": "Hungary", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Hungary AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "ROMANIA_AI_STRATEGY", "jurisdiction": "Romania", "jurisdiction_type": "country", "region": "Europe", "income_group": "upper_middle", "year": 2023, "policy_name": "Romania AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "BULGARIA_AI_STRATEGY", "jurisdiction": "Bulgaria", "jurisdiction_type": "country", "region": "Europe", "income_group": "upper_middle", "year": 2020, "policy_name": "Bulgaria AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "CROATIA_AI_STRATEGY", "jurisdiction": "Croatia", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Croatia AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "SLOVENIA_AI_STRATEGY", "jurisdiction": "Slovenia", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Slovenia AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "GREECE_AI_STRATEGY", "jurisdiction": "Greece", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Greece AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "PORTUGAL_AI_STRATEGY", "jurisdiction": "Portugal", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Portugal AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "IRELAND_AI_STRATEGY", "jurisdiction": "Ireland", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Ireland AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "BELGIUM_AI_STRATEGY", "jurisdiction": "Belgium", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Belgium AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "AUSTRIA_AI_STRATEGY", "jurisdiction": "Austria", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Austria AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "SWITZERLAND_AI_POLICY", "jurisdiction": "Switzerland", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2020, "policy_name": "Swiss AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "ICELAND_AI_POLICY", "jurisdiction": "Iceland", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2021, "policy_name": "Iceland AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}, {"record_id": "LUXEMBOURG_AI_STRATEGY", "jurisdiction": "Luxembourg", "jurisdiction_type": "country", "region": "Europe", "income_group": "high", "year": 2019, "policy_name": "Luxembourg AI Strategy", "policy_type": "strategy", "issuing_body": "National Government", "legal_status": "nonbinding", "healthcare_specific": "partial", "ai_scope": "general_ai", "clinical_use_covered": "partial", "administrative_use_covered": "partial", "risk_classification_present": "yes", "transparency_requirement": "yes", "human_oversight_requirement": "yes", "bias_fairness_requirement": "yes", "privacy_data_governance_requirement": "yes", "safety_validation_requirement": "yes", "post_market_monitoring_requirement": "partial", "enforcement_mechanism": "government oversight", "penalties_present": "no", "implementation_status": "active", "effective_date": "", "source_link": "", "source_type": "secondary", "notes": "National AI governance strategy"}];
+
+const state = {
+  search: "",
+  region: "all",
+  policy_type: "all",
+  legal_status: "all",
+  income_group: "all",
+  flagFilters: {},
+  activeOnly: false,
+  sortKey: "year",
+  sortDir: "desc"
+};
+
+const els = {
+  searchBox: document.getElementById("searchBox"),
+  regionSelect: document.getElementById("regionSelect"),
+  typeSelect: document.getElementById("typeSelect"),
+  legalSelect: document.getElementById("legalSelect"),
+  incomeSelect: document.getElementById("incomeSelect"),
+  regionChips: document.getElementById("regionChips"),
+  tableBody: document.getElementById("tableBody"),
+  resultCount: document.getElementById("resultCount"),
+  detailPanel: document.getElementById("detailPanel"),
+  detailContent: document.getElementById("detailContent"),
+  statRecords: document.getElementById("statRecords"),
+  statJurisdictions: document.getElementById("statJurisdictions"),
+  statRegions: document.getElementById("statRegions"),
+  statActive: document.getElementById("statActive"),
+  statHealth: document.getElementById("statHealth"),
+  statBinding: document.getElementById("statBinding")
+};
+
+function titleize(value) {
+  if (!value) return "—";
+  return String(value)
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, m => m.toUpperCase());
+}
+
+function valueBadge(value, kind="") {
+  const raw = String(value || "").toLowerCase();
+  const cls = raw === "yes" ? "yes" :
+              raw === "partial" ? "partial" :
+              raw === "no" ? "no" :
+              raw === "binding" ? "binding" :
+              raw === "active" ? "active" : "";
+  return `<span class="badge ${cls || kind}">${titleize(value || "—")}</span>`;
+}
+
+function fillSelect(select, values, placeholder) {
+  select.innerHTML = `<option value="all">${placeholder}</option>` +
+    values.map(v => `<option value="${escapeHtml(v)}">${titleize(v)}</option>`).join("");
+}
+
+function escapeHtml(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+const unique = (key) => [...new Set(dataset.map(d => d[key]).filter(Boolean))].sort((a,b) => String(a).localeCompare(String(b)));
+
+fillSelect(els.regionSelect, unique("region"), "All regions");
+fillSelect(els.typeSelect, unique("policy_type"), "All policy types");
+fillSelect(els.legalSelect, unique("legal_status"), "All legal statuses");
+fillSelect(els.incomeSelect, unique("income_group"), "All income groups");
+
+const topRegions = unique("region").slice(0, 12);
+els.regionChips.innerHTML =
+  `<button class="chip active" data-region="all">All</button>` +
+  topRegions.map(r => `<button class="chip" data-region="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join("");
+
+function matchesRecord(record) {
+  const haystack = [
+    record.policy_name, record.jurisdiction, record.region, record.issuing_body,
+    record.notes, record.policy_type, record.enforcement_mechanism, record.ai_scope
+  ].join(" ").toLowerCase();
+
+  if (state.search && !haystack.includes(state.search.toLowerCase())) return false;
+  if (state.region !== "all" && record.region !== state.region) return false;
+  if (state.policy_type !== "all" && record.policy_type !== state.policy_type) return false;
+  if (state.legal_status !== "all" && record.legal_status !== state.legal_status) return false;
+  if (state.income_group !== "all" && record.income_group !== state.income_group) return false;
+  if (state.activeOnly && String(record.implementation_status || "").toLowerCase() !== "active") return false;
+
+  for (const [flag, active] of Object.entries(state.flagFilters)) {
+    if (!active) continue;
+    const value = String(record[flag] || "").toLowerCase();
+    if (!(value === "yes" || value === "partial")) return false;
+  }
+  return true;
+}
+
+function compareValues(a, b) {
+  if (a == null || a === "") return 1;
+  if (b == null || b === "") return -1;
+  if (!isNaN(Number(a)) && !isNaN(Number(b))) return Number(a) - Number(b);
+  return String(a).localeCompare(String(b));
+}
+
+function getFilteredData() {
+  const filtered = dataset.filter(matchesRecord);
+  filtered.sort((a, b) => {
+    const res = compareValues(a[state.sortKey], b[state.sortKey]);
+    return state.sortDir === "asc" ? res : -res;
+  });
+  return filtered;
+}
+
+function renderTable() {
+  const filtered = getFilteredData();
+  els.resultCount.textContent = filtered.length;
+
+  const jurisdictions = new Set(filtered.map(r => r.jurisdiction).filter(Boolean)).size;
+  const regions = new Set(filtered.map(r => r.region).filter(Boolean)).size;
+  const active = filtered.filter(r => String(r.implementation_status).toLowerCase() === "active").length;
+  const health = filtered.filter(r => ["yes","partial"].includes(String(r.healthcare_specific).toLowerCase())).length;
+  const binding = filtered.filter(r => String(r.legal_status).toLowerCase() === "binding").length;
+
+  els.statRecords.textContent = filtered.length;
+  els.statJurisdictions.textContent = jurisdictions;
+  els.statRegions.textContent = regions;
+  els.statActive.textContent = active;
+  els.statHealth.textContent = health;
+  els.statBinding.textContent = binding;
+
+  els.tableBody.innerHTML = filtered.map((record, index) => `
+    <tr data-index="${dataset.indexOf(record)}">
+      <td><strong>${escapeHtml(record.policy_name || "Untitled policy")}</strong></td>
+      <td>${escapeHtml(record.jurisdiction || "—")}</td>
+      <td>${escapeHtml(record.region || "—")}</td>
+      <td>${escapeHtml(record.year || "—")}</td>
+      <td>${valueBadge(record.policy_type)}</td>
+      <td>${valueBadge(record.legal_status)}</td>
+      <td>${valueBadge(record.healthcare_specific)}</td>
+      <td>${valueBadge(record.clinical_use_covered)}</td>
+      <td>${valueBadge(record.implementation_status)}</td>
+      <td>${escapeHtml(record.issuing_body || "—")}</td>
+      <td>${record.source_link ? `<a class="policy-link" href="${escapeHtml(record.source_link)}" target="_blank" rel="noopener noreferrer">Source</a>` : "—"}</td>
+    </tr>
+  `).join("");
+
+  document.querySelectorAll("#tableBody tr").forEach(row => {
+    row.addEventListener("click", () => {
+      const record = filtered[Number(row.dataset.index)] || dataset[Number(row.dataset.index)];
+      openDetail(record);
+    });
+  });
+
+  const csvRows = filtered.map(r => [
+    r.record_id, r.policy_name, r.jurisdiction, r.region, r.year, r.policy_type,
+    r.legal_status, r.healthcare_specific, r.clinical_use_covered,
+    r.implementation_status, r.source_link
+  ]);
+  const csv = [
+    ["record_id","policy_name","jurisdiction","region","year","policy_type","legal_status","healthcare_specific","clinical_use_covered","implementation_status","source_link"],
+    ...csvRows
+  ].map(row => row.map(cell => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
+  document.getElementById("downloadCsvLink").href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+  document.getElementById("downloadCsvLink").download = "filtered_health_ai_policy_results.csv";
+}
+
+function openDetail(record) {
+  if (!record) return;
+  const fields = [
+    ["Jurisdiction", record.jurisdiction],
+    ["Jurisdiction type", record.jurisdiction_type],
+    ["Region", record.region],
+    ["Income group", record.income_group],
+    ["Year", record.year],
+    ["Policy type", record.policy_type],
+    ["Issuing body", record.issuing_body],
+    ["Legal status", record.legal_status],
+    ["Healthcare specific", record.healthcare_specific],
+    ["AI scope", record.ai_scope],
+    ["Clinical use covered", record.clinical_use_covered],
+    ["Administrative use covered", record.administrative_use_covered],
+    ["Risk classification", record.risk_classification_present],
+    ["Transparency requirement", record.transparency_requirement],
+    ["Human oversight", record.human_oversight_requirement],
+    ["Bias / fairness", record.bias_fairness_requirement],
+    ["Privacy / data governance", record.privacy_data_governance_requirement],
+    ["Safety / validation", record.safety_validation_requirement],
+    ["Post-market monitoring", record.post_market_monitoring_requirement],
+    ["Enforcement mechanism", record.enforcement_mechanism],
+    ["Penalties present", record.penalties_present],
+    ["Implementation status", record.implementation_status],
+    ["Effective date", record.effective_date],
+    ["Source type", record.source_type],
+    ["Record ID", record.record_id],
+    ["Notes", record.notes]
+  ];
+
+  els.detailContent.innerHTML = `
+    <h3>${escapeHtml(record.policy_name || "Policy detail")}</h3>
+    <p class="small-note">
+      ${escapeHtml(record.jurisdiction || "—")} · ${escapeHtml(record.year || "—")} ·
+      ${escapeHtml(titleize(record.policy_type) || "—")}
+    </p>
+    <div style="margin: 10px 0 16px;">
+      ${valueBadge(record.legal_status)}
+      ${valueBadge(record.healthcare_specific)}
+      ${valueBadge(record.clinical_use_covered)}
+      ${valueBadge(record.implementation_status)}
+    </div>
+    <div class="detail-grid">
+      ${fields.map(([label, value]) => {
+        const isLongText = ["Notes","Enforcement mechanism"].includes(label);
+        const formatted = !value ? "—" : (isLongText ? escapeHtml(String(value)) : escapeHtml(titleize(value)));
+        return `
+        <div class="detail-item">
+          <strong>${escapeHtml(label)}</strong>
+          <div>${formatted}</div>
+        </div>`;
+      }).join("")}
+      <div class="detail-item" style="grid-column: 1 / -1;">
+        <strong>Source link</strong>
+        <div>${record.source_link ? `<a class="policy-link" href="${escapeHtml(record.source_link)}" target="_blank" rel="noopener noreferrer">${escapeHtml(record.source_link)}</a>` : "—"}</div>
+      </div>
+    </div>
+  `;
+  els.detailPanel.classList.add("open");
+  els.detailPanel.setAttribute("aria-hidden", "false");
+}
+
+document.getElementById("detailClose").addEventListener("click", () => {
+  els.detailPanel.classList.remove("open");
+  els.detailPanel.setAttribute("aria-hidden", "true");
+});
+els.detailPanel.addEventListener("click", (e) => {
+  if (e.target === els.detailPanel) {
+    els.detailPanel.classList.remove("open");
+    els.detailPanel.setAttribute("aria-hidden", "true");
+  }
+});
+
+els.searchBox.addEventListener("input", (e) => {
+  state.search = e.target.value.trim();
+  renderTable();
+});
+els.regionSelect.addEventListener("change", (e) => {
+  state.region = e.target.value;
+  syncRegionChips();
+  renderTable();
+});
+els.typeSelect.addEventListener("change", (e) => {
+  state.policy_type = e.target.value;
+  renderTable();
+});
+els.legalSelect.addEventListener("change", (e) => {
+  state.legal_status = e.target.value;
+  renderTable();
+});
+els.incomeSelect.addEventListener("change", (e) => {
+  state.income_group = e.target.value;
+  renderTable();
+});
+
+function syncRegionChips() {
+  document.querySelectorAll("[data-region]").forEach(chip => {
+    chip.classList.toggle("active", chip.dataset.region === state.region);
+    if (state.region === "all" && chip.dataset.region === "all") chip.classList.add("active");
+  });
+}
+
+document.querySelectorAll("[data-region]").forEach(chip => {
+  chip.addEventListener("click", () => {
+    state.region = chip.dataset.region;
+    els.regionSelect.value = state.region;
+    syncRegionChips();
+    renderTable();
+  });
+});
+
+document.querySelectorAll("[data-flag]").forEach(chip => {
+  chip.addEventListener("click", () => {
+    const key = chip.dataset.flag;
+    state.flagFilters[key] = !state.flagFilters[key];
+    chip.classList.toggle("active", !!state.flagFilters[key]);
+    renderTable();
+  });
+});
+
+document.getElementById("resetFilters").addEventListener("click", () => {
+  state.search = "";
+  state.region = "all";
+  state.policy_type = "all";
+  state.legal_status = "all";
+  state.income_group = "all";
+  state.flagFilters = {};
+  state.activeOnly = false;
+  document.getElementById("showActiveOnly").classList.remove("primary");
+  els.searchBox.value = "";
+  els.regionSelect.value = "all";
+  els.typeSelect.value = "all";
+  els.legalSelect.value = "all";
+  els.incomeSelect.value = "all";
+  document.querySelectorAll(".chip").forEach(chip => chip.classList.remove("active"));
+  const firstRegionChip = document.querySelector('[data-region="all"]');
+  if (firstRegionChip) firstRegionChip.classList.add("active");
+  renderTable();
+});
+
+document.getElementById("showBindingOnly").addEventListener("click", () => {
+  state.legal_status = "binding";
+  els.legalSelect.value = "binding";
+  renderTable();
+});
+document.getElementById("showActiveOnly").addEventListener("click", () => {
+  state.activeOnly = !state.activeOnly;
+  document.getElementById("showActiveOnly").classList.toggle("primary", state.activeOnly);
+  renderTable();
+});
+
+document.querySelectorAll("thead th[data-sort]").forEach(th => {
+  th.addEventListener("click", () => {
+    const key = th.dataset.sort;
+    if (state.sortKey === key) {
+      state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+    } else {
+      state.sortKey = key;
+      state.sortDir = key === "year" ? "desc" : "asc";
+    }
+    renderTable();
+  });
+});
+
+syncRegionChips();
+renderTable();
+</script>
+</body>
+</html>
