@@ -301,6 +301,43 @@ tbody tr:hover {
   color: var(--muted);
   font-size: 0.9rem;
 }
+  .dataset-meta{
+  margin-top: 16px;
+}
+
+.dataset-row{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.dataset-download{
+  flex: 1;
+  text-align: right;
+  padding-right: 22px;
+}
+
+.dataset-divider{
+  width: 1px;
+  height: 52px;
+  background: var(--line);
+  flex: 0 0 1px;
+}
+
+.dataset-citation{
+  flex: 1;
+  text-align: left;
+  padding-left: 22px;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.dataset-citation strong{
+  display: block;
+  margin-bottom: 2px;
+}
 @media (max-width: 1050px) {
   .layout { grid-template-columns: 1fr; }
   .sidebar { position: static; }
@@ -337,19 +374,21 @@ tbody tr:hover {
         </p>
        <div class="dataset-meta">
 
-<div class="dataset-row">
+<div class="dataset-meta">
+  <div class="dataset-row">
+    <div class="dataset-download">
+      <a class="policy-link" href="global_health_ai_policy_dataset.xlsx" download>
+        Download the full dataset (.xlsx)
+      </a>
+    </div>
 
-<div class="dataset-download">
-<a class="policy-link" href="global_health_ai_policy_dataset.xlsx" download>
-Download the full dataset (.xlsx)
-</a>
-</div>
+    <div class="dataset-divider"></div>
 
-<div class="dataset-divider"></div>
-
-<div class="dataset-citation">
-<strong>How to cite this dataset</strong><br>
-Muthakana, R. (2026). <em>Global Health AI Policy Dataset (Version 1.0).</em>
+    <div class="dataset-citation">
+      <strong>How to cite this dataset</strong>
+      Muthakana, R. (2026). <em>Global Health AI Policy Dataset</em> (Version 1.0).
+    </div>
+  </div>
 </div>
   
       </section>
