@@ -551,7 +551,7 @@ function renderTable() {
   els.statHealth.textContent = health;
   els.statBinding.textContent = binding;
 
-  els.tableBody.innerHTML = filtered.map((record, index) => `
+  els.tableBody.innerHTML = filtered.map((record) => `
     <tr data-index="${dataset.indexOf(record)}">
       <td><strong>${escapeHtml(record.policy_name || "Untitled policy")}</strong></td>
       <td>${escapeHtml(record.jurisdiction || "—")}</td>
@@ -569,9 +569,13 @@ function renderTable() {
 
   document.querySelectorAll("#tableBody tr").forEach(row => {
     row.addEventListener("click", () => {
-      const record = filtered[Number(row.dataset.index)] || dataset[Number(row.dataset.index)];
+      const record = dataset[Number(row.dataset.index)];
       openDetail(record);
     });
+  });
+
+  document.querySelectorAll("#tableBody a").forEach(link => {
+    link.addEventListener("click", (e) => e.stopPropagation());
   });
 
   const csvRows = filtered.map(r => [
@@ -579,12 +583,17 @@ function renderTable() {
     r.legal_status, r.healthcare_specific, r.clinical_use_covered,
     r.implementation_status, r.source_link
   ]);
+
   const csv = [
     ["record_id","policy_name","jurisdiction","region","year","policy_type","legal_status","healthcare_specific","clinical_use_covered","implementation_status","source_link"],
     ...csvRows
   ].map(row => row.map(cell => `"${String(cell ?? "").replace(/"/g, '""')}"`).join(",")).join("\n");
-  document.getElementById("downloadCsvLink").href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-  document.getElementById("downloadCsvLink").download = "filtered_health_ai_policy_results.csv";
+
+  const downloadCsvLink = document.getElementById("downloadCsvLink");
+  if (downloadCsvLink) {
+    downloadCsvLink.href = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
+    downloadCsvLink.download = "filtered_health_ai_policy_results.csv";
+  }
 }
 
 function openDetail(record) {
