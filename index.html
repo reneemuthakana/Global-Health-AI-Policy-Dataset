@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -423,17 +424,13 @@ tbody tr:hover {
         </div>
 
         <div class="chip-groups">
-          <div>
-            <label>Quick region filters</label>
-            <div class="chip-row" id="regionChips"></div>
-          </div>
-          <div>
+<div>
             
         </div>
 
         <div class="action-row">
           <button class="button primary" id="resetFilters">Reset filters</button>
-        </div>
+</div>
       </section>
 
       <section class="table-wrap" id="tableSection">
@@ -545,9 +542,11 @@ fillSelect(els.legalSelect, unique("legal_status"), "All legal statuses");
 fillSelect(els.incomeSelect, unique("income_group"), "All income groups");
 
 const topRegions = unique("region").slice(0, 12);
-els.regionChips.innerHTML =
-  `<button class="chip active" data-region="all">All</button>` +
-  topRegions.map(r => `<button class="chip" data-region="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join("");
+if (els.regionChips) {
+  els.regionChips.innerHTML =
+    `<button class="chip active" data-region="all">All</button>` +
+    topRegions.map(r => `<button class="chip" data-region="${escapeHtml(r)}">${escapeHtml(r)}</button>`).join("");
+}
 
 function matchesRecord(record) {
   const haystack = [
@@ -736,20 +735,23 @@ els.incomeSelect.addEventListener("change", (e) => {
 });
 
 function syncRegionChips() {
+  if (!els.regionChips) return;
   document.querySelectorAll("[data-region]").forEach(chip => {
     chip.classList.toggle("active", chip.dataset.region === state.region);
     if (state.region === "all" && chip.dataset.region === "all") chip.classList.add("active");
   });
 }
 
-document.querySelectorAll("[data-region]").forEach(chip => {
-  chip.addEventListener("click", () => {
-    state.region = chip.dataset.region;
-    els.regionSelect.value = state.region;
-    syncRegionChips();
-    renderTable();
+if (els.regionChips) {
+  document.querySelectorAll("[data-region]").forEach(chip => {
+    chip.addEventListener("click", () => {
+      state.region = chip.dataset.region;
+      els.regionSelect.value = state.region;
+      syncRegionChips();
+      renderTable();
+    });
   });
-});
+}
 
 document.querySelectorAll("[data-flag]").forEach(chip => {
   chip.addEventListener("click", () => {
@@ -768,7 +770,7 @@ document.getElementById("resetFilters").addEventListener("click", () => {
   state.income_group = "all";
   state.flagFilters = {};
   state.activeOnly = false;
-  document.getElementById("showActiveOnly").classList.remove("primary");
+  
   els.searchBox.value = "";
   els.regionSelect.value = "all";
   els.typeSelect.value = "all";
@@ -777,17 +779,6 @@ document.getElementById("resetFilters").addEventListener("click", () => {
   document.querySelectorAll(".chip").forEach(chip => chip.classList.remove("active"));
   const firstRegionChip = document.querySelector('[data-region="all"]');
   if (firstRegionChip) firstRegionChip.classList.add("active");
-  renderTable();
-});
-
-document.getElementById("showBindingOnly").addEventListener("click", () => {
-  state.legal_status = "binding";
-  els.legalSelect.value = "binding";
-  renderTable();
-});
-document.getElementById("showActiveOnly").addEventListener("click", () => {
-  state.activeOnly = !state.activeOnly;
-  document.getElementById("showActiveOnly").classList.toggle("primary", state.activeOnly);
   renderTable();
 });
 
